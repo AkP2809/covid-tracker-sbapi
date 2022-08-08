@@ -16,23 +16,26 @@ import org.apache.commons.csv.CSVRecord;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.optimdev.covidtracker.model.CovidDataModel;
+import com.optimdev.covidtracker.model.CovidConfirmedDataModel;
+import com.optimdev.covidtracker.model.CovidDeathsDataModel;
 
 @Service
 public class CovidDataService {
 
-	private static String COVID_DATA_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
+	private static String COVID_DATA_CONFIMRED_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
+	private static String COVID_DATA_DEATHS_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
 	
-	private static List<CovidDataModel> allStats = new ArrayList<>();
+	private static List<CovidConfirmedDataModel> confirmedStats = new ArrayList<>();
+	private static List<CovidDeathsDataModel> deathStats = new ArrayList<>();
 	
 	@PostConstruct
 	@Scheduled(cron = "* * 1 * * *")
-	public static List<CovidDataModel> fetchCovidData() throws IOException, InterruptedException {
-		List<CovidDataModel> currentStats = new ArrayList<>();
+	public static List<CovidConfirmedDataModel> getConfirmedCasesGlobal() throws IOException, InterruptedException {
+		List<CovidConfirmedDataModel> currentStats = new ArrayList<>();
 		
 		HttpClient httpClient = HttpClient.newHttpClient();
 		HttpRequest req = HttpRequest.newBuilder()
-									  .uri(URI.create(COVID_DATA_URL))
+									  .uri(URI.create(COVID_DATA_CONFIMRED_URL))
 									  .build();
 		
 		HttpResponse<String> resp = httpClient.send(req, HttpResponse.BodyHandlers.ofString());
@@ -42,7 +45,7 @@ public class CovidDataService {
 		@SuppressWarnings("deprecation")
 		Iterable<CSVRecord> records = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(csvDataReader);
 		for (CSVRecord record : records) {
-			CovidDataModel cdm = new CovidDataModel();
+			CovidConfirmedDataModel cdm = new CovidConfirmedDataModel();
 			cdm.setCountry(record.get("Country/Region"));
 			cdm.setState(record.get("Province/State"));
 			cdm.setLatestTotalCases(Integer.parseInt(record.get(record.size() - 1)));
@@ -51,11 +54,43 @@ public class CovidDataService {
 			currentStats.add(cdm);
 		}
 		
-		allStats = currentStats; 
+		confirmedStats = currentStats; 
 		
-//		int totalCases = allStats.stream().mapToInt(stat -> stat.getLatestTotalCases()).sum();
-//		System.out.println(totalCases);
+//		int totalConfirmedCases = allStats.stream().mapToInt(stat -> stat.getLatestTotalCases()).sum();
 		
-		return allStats;
+		return confirmedStats;
+	}
+	
+	@PostConstruct
+	@Scheduled(cron = "* * 1 * * *")
+	public static List<CovidDeathsDataModel> getDeathCasesGlobal() throws IOException, InterruptedException {
+		List<CovidDeathsDataModel> currentStats = new ArrayList<>();
+		
+		HttpClient httpClient = HttpClient.newHttpClient();
+		HttpRequest req = HttpRequest.newBuilder()
+									  .uri(URI.create(COVID_DATA_DEATHS_URL))
+									  .build();
+		
+		HttpResponse<String> resp = httpClient.send(req, HttpResponse.BodyHandlers.ofString());
+		
+		StringReader csvDataReader = new StringReader(resp.body());
+		
+		@SuppressWarnings("deprecation")
+		Iterable<CSVRecord> records = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(csvDataReader);
+		for (CSVRecord record : records) {
+			CovidDeathsDataModel cdm = new CovidDeathsDataModel();
+			cdm.setCountry(record.get("Country/Region"));
+			cdm.setState(record.get("Province/State"));
+			cdm.setLatestDeathCases(Integer.parseInt(record.get(record.size() - 1)));
+			cdm.setPreviousDayDeathCases(Integer.parseInt(record.get(record.size() - 2)));
+			
+			currentStats.add(cdm);
+		}
+		
+		deathStats = currentStats; 
+		
+//		int totalDeathCases = allStats.stream().mapToInt(stat -> stat.getLatestTotalCases()).sum();
+		
+		return deathStats;
 	}
 }

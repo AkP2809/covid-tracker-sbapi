@@ -11,14 +11,20 @@ import java.util.List;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.optimdev.covidtracker.model.CovidDataModel;
+import com.optimdev.covidtracker.model.CovidConfirmedDataModel;
+import com.optimdev.covidtracker.model.CovidDeathsDataModel;
 import com.optimdev.covidtracker.services.CovidDataService;
 
 @RestController
 public class OptimController {
 	
-	@RequestMapping("/getData")
-	public List<CovidDataModel> getCovidData() throws IOException, InterruptedException{
-		return CovidDataService.fetchCovidData();
+	@RequestMapping("/getConfirmedCasesGlobal")
+	public List<CovidConfirmedDataModel> getConfirmedCasesGlobal() throws IOException, InterruptedException{
+		return CovidDataService.getConfirmedCasesGlobal();
+	}
+	
+	@RequestMapping("/getDeathCasesGlobal")
+	public List<CovidDeathsDataModel> getDeathCasesGlobal() throws IOException, InterruptedException{
+		return CovidDataService.getDeathCasesGlobal();
 	}
 }

@@ -1,6 +1,6 @@
 package com.optimdev.covidtracker.model;
 
-public class CovidDataModel {
+public class CovidConfirmedDataModel {
 	private String country;
 	private String state;
 	private int latestTotalCases;
