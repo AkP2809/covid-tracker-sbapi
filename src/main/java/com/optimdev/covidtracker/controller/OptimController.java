@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.optimdev.covidtracker.model.CovidConfirmedDataModel;
 import com.optimdev.covidtracker.model.CovidDeathsDataModel;
+import com.optimdev.covidtracker.model.CovidRecoveredDataModel;
 import com.optimdev.covidtracker.services.CovidDataService;
 
 @RestController
@@ -26,5 +27,10 @@ public class OptimController {
 	@RequestMapping("/getDeathCasesGlobal")
 	public List<CovidDeathsDataModel> getDeathCasesGlobal() throws IOException, InterruptedException{
 		return CovidDataService.getDeathCasesGlobal();
+	}
+	
+	@RequestMapping("/getRecoveredCasesGlobal")
+	public List<CovidRecoveredDataModel> getRecoveredCasesGlobal() throws IOException, InterruptedException{
+		return CovidDataService.getRecoveredCasesGlobal();
 	}
 }
