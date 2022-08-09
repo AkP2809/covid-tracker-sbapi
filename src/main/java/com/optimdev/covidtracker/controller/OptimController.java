@@ -8,6 +8,7 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,16 +20,19 @@ import com.optimdev.covidtracker.services.CovidDataService;
 @RestController
 public class OptimController {
 	
+	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping("/getConfirmedCasesGlobal")
 	public List<CovidConfirmedDataModel> getConfirmedCasesGlobal() throws IOException, InterruptedException{
 		return CovidDataService.getConfirmedCasesGlobal();
 	}
 	
+	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping("/getDeathCasesGlobal")
 	public List<CovidDeathsDataModel> getDeathCasesGlobal() throws IOException, InterruptedException{
 		return CovidDataService.getDeathCasesGlobal();
 	}
 	
+	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping("/getRecoveredCasesGlobal")
 	public List<CovidRecoveredDataModel> getRecoveredCasesGlobal() throws IOException, InterruptedException{
 		return CovidDataService.getRecoveredCasesGlobal();
