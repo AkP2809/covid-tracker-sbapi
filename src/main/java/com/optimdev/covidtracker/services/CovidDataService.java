@@ -138,7 +138,7 @@ public class CovidDataService {
 	}
 	
 	@PostConstruct
-	@Scheduled(cron = "0 10,16,22 * * *")
+	@Scheduled(cron = "0 0 10,16,22 * * *")
 	public static List<CovidDailyDataModel> getDailyCasesGlobal() throws IOException, InterruptedException {
 		List<CovidDailyDataModel> currentStats = new ArrayList<>();
 		
