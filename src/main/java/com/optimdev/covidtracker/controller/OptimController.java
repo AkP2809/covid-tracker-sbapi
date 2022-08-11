@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.optimdev.covidtracker.model.CovidConfirmedDataModel;
+import com.optimdev.covidtracker.model.CovidDailyDataModel;
 import com.optimdev.covidtracker.model.CovidDeathsDataModel;
 import com.optimdev.covidtracker.model.CovidRecoveredDataModel;
 import com.optimdev.covidtracker.services.CovidDataService;
@@ -36,5 +37,11 @@ public class OptimController {
 	@RequestMapping("/getRecoveredCasesGlobal")
 	public List<CovidRecoveredDataModel> getRecoveredCasesGlobal() throws IOException, InterruptedException{
 		return CovidDataService.getRecoveredCasesGlobal();
+	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@RequestMapping("/getDailyCasesGlobal")
+	public List<CovidDailyDataModel> getDailyCasesGlobal() throws IOException, InterruptedException{
+		return CovidDataService.getDailyCasesGlobal();
 	}
 }
